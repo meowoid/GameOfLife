@@ -1,0 +1,32 @@
+1.
+int b; 		// create a variable called b
+b = 50; 	// set b to 50
+int a; 		// create a variable called a
+a = b; 		// set variable a to the value stored in variable b
+System.out.println(a); //print a value, 50 which is what b was set to.
+
+2.
+Prints out '10' and on a new line '9'. This is because post-decrement is used
+so it outputs the intial value of 10, decrements the value and then prints the
+new value of j which is 10-1 = 9.
+
+3.
+9q
+9
+
+4.
+(i)
+int c = 4;
+System.out.println(0x55>>c); // Outputs 5.
+
+(ii)
+int d = 7;
+System.out.println(0x55<<d); //Outputs 10880
+
+5.
+It appends n 0s to the 1 as the 1 is shifted left. This means the one is in the
+2^n place and all the other bits are zero. 
+
+6.
+1 & x>>4
+

@@ -1,0 +1,40 @@
+1.
+int bit = 8*row + col;
+
+2.
+int col = i % 8;
+
+3.
+int row = i / 8;
+
+4. 1 (6 = 0110, 2nd bit = 1)
+
+5. 0 (20th bit)
+
+6. Testing countNeighbours
+
+	world 	    - col - row - result
+0x20A0600000000000l -  6  -  6  -   5
+0x20A0600000000000l -  2  -  2  -   0
+0x20A0600000000000l -  4  -  4  -   1
+0x20A0600000000000l -  4  -  5  -   2
+0x20A0600000000000l -  4  -  6  -   3
+
+7. Results from test as expected.
+
+
+8. Testing computeCell
+
+	world 	    - col - row - result
+0x20A0600000000000l -  6  -  6  - false
+0x20A0600000000000l -  4  -  4  - false
+0x20A0600000000000l -  4  -  5  - false
+0x20A0600000000000l -  4  -  6  - true
+0x20A0600000000000l -  2  -  2  - false
+0x20A0600000000000l -  7  -  5  - false
+0x20A0600000000000l -  6  -  7  - true
+0x20A0600000000000l -  5  -  4  - false
+
+9. Results from test as expected
+
+

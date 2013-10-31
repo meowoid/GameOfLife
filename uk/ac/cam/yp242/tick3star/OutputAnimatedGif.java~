@@ -1,0 +1,116 @@
+package uk.ac.cam.yp242.tick3star;
+
+// Tell the compiler where to find the additional classes used in this file
+import java.awt.*;
+import java.awt.image.*;
+import java.io.*;
+import javax.imageio.*;
+import javax.imageio.stream.*;
+import javax.imageio.metadata.*;
+
+public class OutputAnimatedGif {
+
+ private FileImageOutputStream output;
+ private ImageWriter writer;
+
+ public OutputAnimatedGif(String file) throws IOException {
+  this.output = new FileImageOutputStream(new File(file)); 
+  this.writer = ImageIO.getImageWritersByMIMEType("image/gif").next();
+  this.writer.setOutput(output);
+  this.writer.prepareWriteSequence(null);
+ }
+
+ private BufferedImage makeFrame(boolean[][] world) {
+  int w = world[0].length * 15;
+  int h = world.length * 15;
+  BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+  Graphics g = image.getGraphics();
+
+  //make Colors
+  Color lightblue = new Color(0.678431F, 0.847059F, 0.901961F);
+  Color lightsky = new Color(0.529412F, 0.807843F, 0.980392F);
+  Color darkturquoise = new Color(0, 0.807843F, 0.819608F);
+  Color medseagreen = new Color(0.235294F, 0.701961F, 0.443137F);
+  Color forrestgreen  = new Color(0.133333F, 0.545098F, 0.133333F);
+  Color white = new Color(0F,0F,0F);
+
+  //fill Background
+  g.setColor(lightblue); //lightblue BG
+  g.fillRect(0,0,w,h);
+
+  //draw lines
+  g.setColor(white); //darkturquoise lines
+  for (int col = 1; col < world[0].length; col++){
+    g.drawLine(15*col,0,15*col,h);
+  }
+
+  for (int row = 1; row < world.length; row++){
+    g.drawLine(0,15*row,w,15*row);
+  }
+
+  //fill appropriate cells
+  for (int row = 0; row < world.length; row ++) {
+      for (int col = 0; col < world[row].length; col++) {
+        if (world[row][col]) {
+          if ((col+row)%2 == 0) {
+            g.setColor(forrestgreen);
+            g.fillRoundRect(col*15,row*15,15,15,3,3);
+          }
+      
+          else {
+            g.setColor(medseagreen);
+            g.fillRoundRect(col*15,row*15,15,15,3,3);
+          }
+        }
+        else {
+          if ((col+row)%2 == 0) {
+            g.setColor(lightsky);
+            g.fillRect(col*15,row*15,15,15);
+          }
+          else{
+            g.setColor(lightblue);
+            g.fillRect(col*15,row*15,15,15);
+          }
+        }
+      }
+    }
+  g.dispose();
+  return image;
+ }
+	
+ public void addFrame(boolean[][] world) throws IOException {
+  BufferedImage image = makeFrame(world);
+  try {
+   IIOMetadataNode node = new IIOMetadataNode("javax_imageio_gif_image_1.0");
+   IIOMetadataNode extension = new IIOMetadataNode("GraphicControlExtension");
+   extension.setAttribute("disposalMethod", "none");
+   extension.setAttribute("userInputFlag", "FALSE");
+   extension.setAttribute("transparentColorFlag", "FALSE");
+   extension.setAttribute("delayTime", "1");
+   extension.setAttribute("transparentColorIndex", "255");
+   node.appendChild(extension);
+   IIOMetadataNode appExtensions = new IIOMetadataNode("ApplicationExtensions");
+   IIOMetadataNode appExtension = new IIOMetadataNode("ApplicationExtension");
+   appExtension.setAttribute("applicationID", "NETSCAPE");
+   appExtension.setAttribute("authenticationCode", "2.0");
+   byte[] b = "\u0021\u00ff\u000bNETSCAPE2.0\u0003\u0001\u0000\u0000\u0000".getBytes();
+   appExtension.setUserObject(b);
+   appExtensions.appendChild(appExtension);
+   node.appendChild(appExtensions);
+
+   IIOMetadata metadata;
+   metadata = writer.getDefaultImageMetadata(new ImageTypeSpecifier(image), null);
+   metadata.mergeTree("javax_imageio_gif_image_1.0", node);
+
+   IIOImage t = new IIOImage(image, null, metadata);
+   writer.writeToSequence(t, null);
+  }
+  catch (IIOInvalidTreeException e) {
+   throw new IOException(e);
+  }
+ }
+
+ public void close() throws IOException {
+  writer.endWriteSequence();
+ }
+}

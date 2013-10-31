@@ -1,0 +1,15 @@
+The getSound method returns a SineWaveSound object for a given state of the game of life.
+It takes in as the parameters, the population and the double and calculates the frequency
+using simple algebra. Every 8 generations, a low frequency is used for the SineWaveSound
+to simulate a bass drum using generation modulo 8 = 0. Every generation after that one, a lower
+frequency is used to simulate a double bass with a lower frequency. Otherwise, a simple 
+multiplication and modulo is done on the population and generation to simulate a melody depending
+on the game of life.
+
+The makeTune method takes a game state, number of generations to use and the filename of the 
+tune. An AudioSequence object is created and SineWaveSounds are added to the appropriate 
+timeslices using a for loop to go through the first 'rep' states. To add further music
+to the tune, after generation 60, additional high frequency SineWaveSound is added to the
+timeslice for 10 generaions, every 10 generations/10 modulo 10.
+
+

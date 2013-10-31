@@ -1,0 +1,7 @@
+3.
+Should output
+0
+2
+2
+1
+as they are all referenced to the same cell.
